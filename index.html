@@ -1,0 +1,28 @@
+<body>
+    <style>
+        #output {
+            width: 290px;
+            height: 210px;
+        }
+    </style>
+    <div id="output">
+    </div>
+    <textarea id="input">
+        CAFE
+        7am - 12pm
+    </textarea>
+    <script>
+        (function() {
+            const input = document.getElementById('input');
+            const output = document.getElementById('output');
+
+            function updateOutput() {
+                output.innerHTML = input.innerHTML;
+            }
+
+            input.addEventListener('input', updateOutput);
+
+            updateOutput();
+        })();
+    </script>
+</body>
