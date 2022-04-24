@@ -17,17 +17,18 @@
         <div id="output">
         </div>
         <!--textarea id="input">CAFE</textarea-->
-        <textarea id="input">
-        </textarea>
+        <textarea id="input"></textarea>
         <script>
             const { getTextWidth } = fontInit();
 
             function getFontSizeForWidth(text, maxWidth) {
+                if (! text.length) {
+                    return 0;
+                }
                 return (function loop(size, lastSize = 0, lastWidth = 0) {
                     const width = getTextWidth(text, `${size}px arial`);
 
                     if(width > maxWidth) {
-                        console.log('FINAL', width, size, lastSize);
                         return lastSize;
                     }
                     return loop(size + 1, size);
@@ -42,6 +43,7 @@
                 dom.style.fontFamily = fontFamily;
                 //dom.style.display = 'inline';
                 //dom.style.whiteSpace = 'nowrap';
+                dom.style.whiteSpace = 'pre';
                 return dom;
             }
 
@@ -49,22 +51,25 @@
                 const input = document.getElementById('input');
                 const output = document.getElementById('output');
 
-                /*
-                function updateOutput() {
-                    const text = input.innerHTML;
+                function updateOutput(text) {
                     const size = getFontSizeForWidth(text, 290);
-                    output.innerHTML = text;
+
+                    output.innerHTML = '';
                     output.style.fontSize = `${size}px`;
-                    console.log(text, size);
+
+                    text.split('\n').forEach(text => {
+                        const size = getFontSizeForWidth(text, 250);
+                        output.appendChild(div(text, 'arial', size));
+                    });
                 }
 
-                input.addEventListener('input', updateOutput);
-                */
-
-                ['CAFÉ', '7am - 12pm', 'Mon - Fri (exc. holidays)'].forEach(text => {
-                    const size = getFontSizeForWidth(text, 250);
-                    output.appendChild(div(text, 'arial', size));
-                });
+                input.addEventListener('input', e => updateOutput(e.target.value));
+                const startText = ` CAFÉ 
+7am - 12pm
+          Mon - Fri         
+                                except holidays`;
+                input.innerHTML = startText;
+                updateOutput(startText);
             })();
         </script>
     </body>
