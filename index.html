@@ -1,28 +1,71 @@
-<body>
-    <style>
-        #output {
-            width: 290px;
-            height: 210px;
-        }
-    </style>
-    <div id="output">
-    </div>
-    <textarea id="input">
-        CAFE
-        7am - 12pm
-    </textarea>
-    <script>
-        (function() {
-            const input = document.getElementById('input');
-            const output = document.getElementById('output');
+<html>
+    <head>
+        <script src="./fontInit.js"></script>
+    </head>
+    <body>
+        <style>
+            #output {
+                display: flex;
+                width: 290px;
+                height: 210px;
+                background-color: #eee;
+                text-align: center;
+                flex-direction: column;
+                justify-content: center;
+            }
+        </style>
+        <div id="output">
+        </div>
+        <!--textarea id="input">CAFE</textarea-->
+        <textarea id="input">
+        </textarea>
+        <script>
+            const { getTextWidth } = fontInit();
 
-            function updateOutput() {
-                output.innerHTML = input.innerHTML;
+            function getFontSizeForWidth(text, maxWidth) {
+                return (function loop(size, lastSize = 0, lastWidth = 0) {
+                    const width = getTextWidth(text, `${size}px arial`);
+
+                    if(width > maxWidth) {
+                        console.log('FINAL', width, size, lastSize);
+                        return lastSize;
+                    }
+                    return loop(size + 1, size);
+                })(1);
             }
 
-            input.addEventListener('input', updateOutput);
+            function div(text, fontFamily, fontSize) {
+                const dom = document.createElement('div');
+                dom.innerHTML = text;
+                dom.style.fontSize = fontSize + 'px';
+                dom.style.lineHeight = fontSize + 'px';
+                dom.style.fontFamily = fontFamily;
+                //dom.style.display = 'inline';
+                //dom.style.whiteSpace = 'nowrap';
+                return dom;
+            }
 
-            updateOutput();
-        })();
-    </script>
-</body>
+            (function() {
+                const input = document.getElementById('input');
+                const output = document.getElementById('output');
+
+                /*
+                function updateOutput() {
+                    const text = input.innerHTML;
+                    const size = getFontSizeForWidth(text, 290);
+                    output.innerHTML = text;
+                    output.style.fontSize = `${size}px`;
+                    console.log(text, size);
+                }
+
+                input.addEventListener('input', updateOutput);
+                */
+
+                ['CAFÉ', '7am - 12pm', 'Mon - Fri (exc. holidays)'].forEach(text => {
+                    const size = getFontSizeForWidth(text, 250);
+                    output.appendChild(div(text, 'arial', size));
+                });
+            })();
+        </script>
+    </body>
+</html>
